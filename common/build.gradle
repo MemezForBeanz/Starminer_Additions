@@ -20,4 +20,11 @@ dependencies {
     // As of VS core 1.1.0+ea6dc8576e the former `api-game` module was folded into `api`,
     // so there is a single artifact to depend on.
     modCompileOnly("org.valkyrienskies.core:api:$vscore_version")
+
+    // ModernUI. The loader artifact is the MC bridge (icyllis.modernui.mc — MuiModApi
+    // etc., identical package in both loader jars); compile against the intermediary
+    // Fabric one since loom can remap it, unlike the SRG-mapped Forge jar. The widget/
+    // graphics framework is ModernUI-Core, plain Java with no Minecraft classes.
+    modCompileOnly("icyllis.modernui:ModernUI-Fabric:$modernui_version")
+    compileOnly("icyllis.modernui:ModernUI-Core:$modernui_core_version")
 }

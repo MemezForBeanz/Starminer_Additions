@@ -41,6 +41,11 @@ import java.util.function.Supplier;
 public class StellarCoreItem extends Item implements BotariumEnergyItem<WrappedItemEnergyContainer> {
     public static final String ACTIVE_TAG = "Active";
     public static final String MODE_TAG = "Mode";
+
+    /** The Stellar Core's energy capacity; the Gravity Generator's buffer matches it. */
+    public static final long CAPACITY = 890_909_000L;
+    public static final long MAX_TRANSFER = 10_000_000L;
+
     private final long capacity;
     private final long maxInput;
     private final long maxOutput;
@@ -54,7 +59,7 @@ public class StellarCoreItem extends Item implements BotariumEnergyItem<WrappedI
 
     public static boolean active(ItemStack stack) {
         CompoundTag tag = stack.getOrCreateTag();
-        return tag.contains("Active") ? tag.getBoolean("Active") : true;
+        return !tag.contains("Active") || tag.getBoolean("Active");
     }
 
     public static boolean toggleActive(ItemStack stack) {
@@ -133,8 +138,7 @@ public class StellarCoreItem extends Item implements BotariumEnergyItem<WrappedI
         if (!level.isClientSide()) {
             if (entity.tickCount % 5 == 0) {
                 if (active(stack)) {
-                    if (entity instanceof Player) {
-                        Player player = (Player)entity;
+                    if (entity instanceof Player player) {
                         Inventory inventory = player.getInventory();
                         WrappedItemEnergyContainer container = this.getEnergyStorage(stack);
                         if (container.getStoredEnergy() != 0L) {

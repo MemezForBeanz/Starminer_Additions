@@ -1,5 +1,5 @@
 plugins {
-    id 'com.github.johnrengelman.shadow'
+    id 'com.gradleup.shadow'
 }
 
 loom {
@@ -22,9 +22,10 @@ repositories {
     }
     maven { url = "https://maven.resourcefulbees.com/repository/maven-public/" }
     maven { url = "https://thedarkcolour.github.io/KotlinForForge/" } // Kotlin For Forge (VS2 runtime)
-    // VS-Gravity (gravity-on-ships API fork) is consumed from JitPack — see the
-    // com.github.MemezForBeanz:VS-Gravity dependency below. jitpack.io is already declared
-    // in the root repositories block.
+    // VS-Gravity: local co-development builds (./gradlew publishToMavenLocal in the
+    // VS-Gravity repo). For releases, tag the fork and switch the dependency back to the
+    // jitpack coordinates (com.github.MemezForBeanz:VS-Gravity:<tag>).
+    mavenLocal()
     maven {
         url "https://cursemaven.com"
     }
@@ -53,25 +54,18 @@ configurations {
     runtimeClasspath.extendsFrom common
     developmentForge.extendsFrom common
 
-    // Files in this configuration will be bundled into your mod using the Shadow plugin.
-    // Don't use the `shadow` configuration from the plugin itself as it's meant for excluding files.
     shadowBundle {
         canBeResolved = true
         canBeConsumed = false
     }
 }
 
-// Pin the mixin helper libraries to a single version across every configuration (including
-// loom's remapped mod configs). Many mods here bundle their own mixinextras/mixinsquared;
-// if two *different* versions reach the mod path, Forge unions the duplicated (multi-release)
-// packages and dies with "NoSuchFileException: /META-INF/versions". Same-version duplicates
-// are deduped by Forge and are fine, so forcing one version is what keeps mod scanning happy.
 configurations.all {
     resolutionStrategy {
-        force "io.github.llamalad7:mixinextras-common:0.5.4"
-        force "io.github.llamalad7:mixinextras-forge:0.5.4"
-        force "com.github.bawnorton.mixinsquared:mixinsquared-common:0.3.4"
-        force "com.github.bawnorton.mixinsquared:mixinsquared-forge:0.3.4"
+        force "io.github.llamalad7:mixinextras-common:0.5.5"
+        force "io.github.llamalad7:mixinextras-forge:0.5.5"
+        force "com.github.bawnorton.mixinsquared:mixinsquared-common:0.3.7"
+        force "com.github.bawnorton.mixinsquared:mixinsquared-forge:0.3.7"
         // One Kotlin version across everything -> one module per kotlin package.
         force "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
         force "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
@@ -85,56 +79,37 @@ dependencies {
     forge "net.minecraftforge:forge:$project.forge_version"
     modImplementation "dev.architectury:architectury-forge:$project.architectury_api_version"
 
-    // Mixin helper versions MUST match what VS-Gravity ships (mixinsquared 0.3.4,
-    // mixinextras 0.5.4). If they differ, VS-Gravity's remapped copy and our copy both
-    // land on the mod path as separate jars, and two multi-release mixinextras jars with
-    // the same packages make Forge's SecureJar throw "NoSuchFileException: /META-INF/versions"
-    // during mod scanning. We provide them; VS-Gravity's transitives are excluded below.
-    compileOnly(annotationProcessor("com.github.bawnorton.mixinsquared:mixinsquared-common:0.3.4"))
-    implementation(include("com.github.bawnorton.mixinsquared:mixinsquared-forge:0.3.4"))
+    // Mixin helper
+    compileOnly(annotationProcessor("com.github.bawnorton.mixinsquared:mixinsquared-common:0.3.7"))
+    implementation(include("com.github.bawnorton.mixinsquared:mixinsquared-forge:0.3.7"))
 
-    compileOnly "io.github.llamalad7:mixinextras-common:0.5.4"
-    annotationProcessor "io.github.llamalad7:mixinextras-common:0.5.4"
-    implementation "io.github.llamalad7:mixinextras-forge:0.5.4"
+    compileOnly "io.github.llamalad7:mixinextras-common:0.5.5"
+    annotationProcessor "io.github.llamalad7:mixinextras-common:0.5.5"
+    implementation "io.github.llamalad7:mixinextras-forge:0.5.5"
 
     common(project(path: ':common', configuration: 'namedElements')) { transitive false }
     shadowBundle project(path: ':common', configuration: 'transformProductionForge')
 
-    // Valkyrien Skies 2 (gravity on ships). The forge jar unpacks core impl/internal/game
-    // directly and ships api/util only as Jar-in-Jar, which loom strips when remapping for
-    // dev. So api/util must be supplied separately here. We exclude the whole core group
-    // from the (mod) forge jar and add api/util as plain runtime LIBRARIES via
-    // forgeRuntimeLibrary below — NOT as modImplementation. Routing them through
-    // modImplementation makes loom remap them into mod jars that Forge then scans, and the
-    // remapped core jars blow up mod discovery with UnionFileSystem "NoSuchFileException:
-    // /META-INF/versions". VS-Gravity's own build depends on VS core the same way (plain
-    // libraries, joml excluded because Minecraft already provides joml).
+    // Valkyrien Skies 2
+
     modImplementation("org.valkyrienskies:valkyrienskies-120-forge:$vs2_version") {
         exclude group: "org.valkyrienskies.core"
     }
-    // Exclude only the base joml module (Minecraft ships org.joml:joml) but KEEP
-    // joml-primitives, which MC does not bundle and VS needs (org.joml.primitives.*).
-    // Keep the transitive kotlin-stdlib: it is the single standalone Kotlin runtime that
-    // both the VS forge mod and these forgeRuntimeLibrary modules read. (We do NOT use
-    // Kotlin For Forge, whose fat -all jar bundles Kotlin into its own module that the
-    // split-out util module can't read -> kotlin.jvm.internal.Intrinsics NoClassDefFound.)
+    // Exclude only the base joml module (Minecraft ships org.joml:joml)
+
     forgeRuntimeLibrary("org.valkyrienskies.core:api:$vscore_version") {
         exclude group: "org.joml", module: "joml"
     }
     forgeRuntimeLibrary("org.valkyrienskies.core:util:$vscore_version") {
         exclude group: "org.joml", module: "joml"
     }
-    // Kotlin runtime for VS (kotlin-stdlib arrives transitively via api/util above; VS also
-    // uses reflection). A single consistent Kotlin version keeps one module per package.
+    // Kotlin runtime for VS
     forgeRuntimeLibrary "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
-    // VS also uses kotlinx coroutines (ship physics) and serialization at runtime; KFF used
-    // to bundle these. Versions match what Kotlin For Forge 4.x shipped (kotlin 2.x compatible).
+
     forgeRuntimeLibrary "org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.8.1"
     forgeRuntimeLibrary "org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.8.1"
     forgeRuntimeLibrary "org.jetbrains.kotlinx:kotlinx-serialization-json-jvm:1.6.3"
-    // The forge jar JiJs VS core's other runtime libraries (dagger DI, the jackson stack,
-    // commons-math3, json-schema, ...) and loom strips that JiJ in dev — so add them here.
-    // Coordinates/versions are taken verbatim from the forge jar's META-INF/jarjar/metadata.json.
+    // The forge jar JiJs VS core's other runtime libraries
     [
         "javax.inject:javax.inject:1",
         "com.google.dagger:dagger:2.43.2",
@@ -154,9 +129,8 @@ dependencies {
         "com.fasterxml:classmate:1.5.1",
         "com.flipkart.zjsonpatch:zjsonpatch:0.4.11",
     ].each { forgeRuntimeLibrary(it) { exclude group: "org.jetbrains.kotlin" } }
-    // VS-Gravity ships its own mixinextras/mixinsquared; exclude them so we don't get a
-    // second (remapped) copy of those mixin libs on the mod path — the copies above serve both.
-    modImplementation("com.github.MemezForBeanz:VS-Gravity:1.0.7") {
+
+    modImplementation("net.memezforbeanz.gravityapi:gravityapi:1.0.26") {
         exclude group: "io.github.llamalad7"
         exclude group: "com.github.bawnorton.mixinsquared"
     }
@@ -166,7 +140,12 @@ dependencies {
 
     modImplementation "com.teamresourceful.resourcefullib:resourcefullib-forge-1.20.1:2.1.29"
 
-    annotationProcessor "org.spongepowered:mixin:0.8.5:processor"
+    // ModernUI (generator screens). The maven loader jar is just the MC bridge — the
+    // release jar players install bundles core, but the dev runtime needs it supplied.
+    modImplementation("icyllis.modernui:ModernUI-Forge:$modernui_version")
+    forgeRuntimeLibrary("icyllis.modernui:ModernUI-Core:$modernui_core_version")
+
+    annotationProcessor "org.spongepowered:mixin:0.8.7:processor"
 }
 
 

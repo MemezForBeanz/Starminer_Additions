@@ -1,7 +1,9 @@
 package net.memezforbeanz.starminerodyssey;
 
 import mod.azure.azurelib.render.item.AzItemRendererRegistry;
+import net.memezforbeanz.starminerodyssey.gravity.GravityAnchors;
 import net.memezforbeanz.starminerodyssey.item.client.StellarCoreRenderer;
+import net.memezforbeanz.starminerodyssey.network.ModNetwork;
 import net.memezforbeanz.starminerodyssey.registry.*;
 import org.slf4j.Logger;
 
@@ -30,6 +32,10 @@ public class StarminerAdditions {
 		LOGGER.info("Initialized creative tabs");
 		ModBlockEntityTypes.BLOCK_ENTITY_TYPES.init();
 		LOGGER.info("Initialized block entity types");
+		ModNetwork.init();
+		LOGGER.info("Initialized networking");
+		GravityAnchors.init();
+		LOGGER.info("Initialized gravity anchors");
 		LOGGER.info("Starminer Additions initialization complete!");
 	}
     public static void initClient() {
