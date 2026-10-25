@@ -9,6 +9,7 @@ import com.teamresourceful.resourcefullib.common.registry.ResourcefulRegistry;
 import net.memezforbeanz.starminerodyssey.StarminerAdditions;
 import net.memezforbeanz.starminerodyssey.blocks.GravityGeneratorBlockEntity;
 import net.memezforbeanz.starminerodyssey.blocks.PlatingBlockEntity;
+import net.memezforbeanz.starminerodyssey.blocks.ShipAnchorBlockEntity;
 import net.memezforbeanz.starminerodyssey.blocks.StellarGravityBlockEntity;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.level.block.Block;
@@ -21,6 +22,7 @@ public class ModBlockEntityTypes {
     public static final RegistryEntry<BlockEntityType<StellarGravityBlockEntity>> STELLAR_GRAVITY;
     public static final RegistryEntry<BlockEntityType<GravityGeneratorBlockEntity>> GRAVITY_GENERATOR;
     public static final RegistryEntry<BlockEntityType<PlatingBlockEntity>> PLATING;
+    public static final RegistryEntry<BlockEntityType<ShipAnchorBlockEntity>> SHIP_ANCHOR;
 
     public ModBlockEntityTypes() {
     }
@@ -38,5 +40,7 @@ public class ModBlockEntityTypes {
         PLATING = BLOCK_ENTITY_TYPES.register("plating",
                 () -> Builder.of(PlatingBlockEntity::new,
                         ModBlocks.PLATING.get(), ModBlocks.DENSE_PLATING.get()).build(null));
+        SHIP_ANCHOR = BLOCK_ENTITY_TYPES.register("ship_anchor",
+                () -> Builder.of(ShipAnchorBlockEntity::new, ModBlocks.SHIP_ANCHOR.get()).build(null));
     }
 }

@@ -1,0 +1,70 @@
+{
+  "dimensions": [
+    "cosmos:solar_system",
+    "cosmos:alpha_system",
+    "cosmos:b_1400_centauri",
+    "cosmos:gaia_bh_1"
+  ],
+  "placement": {
+    "spacing": 12,
+    "separation": 4,
+    "salt": 19011220,
+    "spread_type": "triangular"
+  },
+  "layers": [
+    {
+      "min": 250,
+      "max": 400
+    },
+    {
+      "min": 425,
+      "max": 575
+    },
+    {
+      "min": 600,
+      "max": 750
+    },
+    {
+      "min": 775,
+      "max": 925
+    }
+  ],
+  "templates": [
+    {
+      "id": "starmineradditions:planetoids/common/planetoid_small",
+      "weight": 9
+    },
+    {
+      "id": "starmineradditions:planetoids/common/planetoid_small2",
+      "weight": 3
+    },
+    {
+      "id": "starmineradditions:planetoids/rare/planetoid_large",
+      "weight": 5
+    },
+    {
+      "id": "starmineradditions:planetoids/rare/planetoid_medium",
+      "weight": 1
+    }
+  ],
+  "block_remap": {
+    "simply_starminer:star_heart": "starmineradditions:stellar_gravity",
+    "simply_starminer:star_veins": "starmineradditions:star_helium",
+    "simply_starminer:star_gelatin": "minecraft:slime_block",
+    "simply_starminer:star_bone": "minecraft:bone_block",
+    "simply_starminer:star_flesh": "minecraft:nether_wart_block"
+  },
+  "spawn_as": "blocks",
+  "assemble_distance": 96,
+  "release_distance": 208,
+  "recycle_after_seconds": 10,
+  "random_rotation": true,
+  "motion": {
+    "type": "kinematic",
+    "chance": 0.6,
+    "angular_speed": {
+      "min": 1,
+      "max": 6
+    }
+  }
+}

@@ -20,6 +20,12 @@ dependencies {
     // As of VS core 1.1.0+ea6dc8576e the former `api-game` module was folded into `api`,
     // so there is a single artifact to depend on.
     modCompileOnly("org.valkyrienskies.core:api:$vscore_version")
+    compileOnly("org.valkyrienskies.core:internal:$vscore_version") { exclude group: "org.joml" }
+    // VS2's common module (VSGameUtilsKt etc.), identical in the Forge and Fabric jars
+    modCompileOnly("org.valkyrienskies:valkyrienskies-120-common:$vs2_version") { transitive = false }
+
+    // VS-Gravity's loader-neutral module: GravityBridge's backend (VSGravityBridge) links against it
+    modCompileOnly("net.memezforbeanz.gravityapi:gravityapi-common:$gravityapi_version") { transitive = false }
 
     // ModernUI. The loader artifact is the MC bridge (icyllis.modernui.mc — MuiModApi
     // etc., identical package in both loader jars); compile against the intermediary

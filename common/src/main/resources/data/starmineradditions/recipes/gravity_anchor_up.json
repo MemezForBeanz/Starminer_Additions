@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "C": {
+      "item": "minecraft:compass"
+    },
+    "F": {
+      "item": "starmineradditions:plating"
+    }
+  },
+  "pattern": [
+    " C",
+    "F "
+  ],
+  "result": {
+    "item": "starmineradditions:gravity_anchor_up"
+  }
+}

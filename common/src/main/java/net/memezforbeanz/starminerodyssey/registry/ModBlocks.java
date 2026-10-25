@@ -8,6 +8,7 @@ import net.memezforbeanz.starminerodyssey.StarminerAdditions;
 
 import net.memezforbeanz.starminerodyssey.blocks.GravityGeneratorBlock;
 import net.memezforbeanz.starminerodyssey.blocks.PlatingBlock;
+import net.memezforbeanz.starminerodyssey.blocks.ShipAnchorBlock;
 import net.memezforbeanz.starminerodyssey.blocks.StellarGravityBlock;
 import net.memezforbeanz.starminerodyssey.blocks.fluid.HeliumLiquidBlock;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -25,6 +26,7 @@ public class ModBlocks {
     public static final RegistryEntry<Block> GRAVITY_GENERATOR;
     public static final RegistryEntry<Block> PLATING;
     public static final RegistryEntry<Block> DENSE_PLATING;
+    public static final RegistryEntry<Block> SHIP_ANCHOR;
 
     /** Amethyst Gravity's plating field reaches: normal lets you walk, dense lets you jump. */
     public static final double PLATING_FIELD_HEIGHT = 0.6;
@@ -51,6 +53,9 @@ public class ModBlocks {
                 BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_PURPLE).noOcclusion().noCollission().instabreak()));
         DENSE_PLATING = BLOCKS.register("dense_plating", () -> new PlatingBlock(DENSE_PLATING_FIELD_HEIGHT,
                 BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_PURPLE).noOcclusion().noCollission().instabreak()));
+        // Ship spawner marker: invisible, unbreakable, no item; removes itself on assembly
+        SHIP_ANCHOR = BLOCKS.register("ship_anchor", () -> new ShipAnchorBlock(BlockBehaviour.Properties.of()
+                .noCollission().noOcclusion().noLootTable().strength(-1.0F, 3600000.0F)));
 
     }
 }

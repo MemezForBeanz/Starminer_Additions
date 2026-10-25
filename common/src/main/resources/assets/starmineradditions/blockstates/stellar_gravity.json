@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "active=false": {
+      "model": "starmineradditions:block/stellar_gravity"
+    },
+    "active=true": {
+      "model": "starmineradditions:block/stellar_gravity"
+    }
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "active=false": {
+      "model": "starmineradditions:block/gravity_generator"
+    },
+    "active=true": {
+      "model": "starmineradditions:block/gravity_generator"
+    }
+  }
+}

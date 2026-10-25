@@ -33,7 +33,14 @@ subprojects {
         maven { url "https://maven.teamresourceful.com/repository/maven-public/" }
         maven { url "https://maven.shedaniel.me/" }
         maven { url "https://maven.terraformersmc.com/releases/" }
+        // VS-Gravity comes from publishToMavenLocal builds only: never ask a remote repo for
+        // it (one broken remote disables the rest mid-build and the lookup fails)
+        exclusiveContent {
+            forRepository { mavenLocal() }
+            filter { includeGroup "net.memezforbeanz.gravityapi" }
+        }
         maven { url 'https://jitpack.io' }
+        maven { url = "https://maven.bawnorton.com/releases" } // MixinSquared (nested in VS-Gravity)
         maven { url = "https://maven.izzel.io/releases/" } // ModernUI
         maven { url = "https://maven.valkyrienskies.org/" } // Valkyrien Skies 2 + VS core
         maven {

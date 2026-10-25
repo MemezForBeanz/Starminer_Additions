@@ -4,6 +4,7 @@ import mod.azure.azurelib.render.item.AzItemRendererRegistry;
 import net.fabricmc.api.ClientModInitializer;
 import net.memezforbeanz.starminerodyssey.StarminerAdditions;
 import net.memezforbeanz.starminerodyssey.blocks.client.GravityGeneratorItemRenderer;
+import net.memezforbeanz.starminerodyssey.blocks.client.StellarGravityItemRenderer;
 import net.memezforbeanz.starminerodyssey.item.client.StellarCoreRenderer;
 import net.memezforbeanz.starminerodyssey.registry.ModBlockEntityTypes;
 import net.memezforbeanz.starminerodyssey.registry.ModItems;
@@ -17,12 +18,13 @@ public final class StarminerAdditionsFabricClient implements ClientModInitialize
 
         // Register AzureLib item renderers (Fabric-specific, safe to call .get() here)
         AzItemRendererRegistry.register(StellarCoreRenderer::new, ModItems.STELLAR_CORE.get());
+        AzItemRendererRegistry.register(StellarGravityItemRenderer::new, ModItems.STELLAR_GRAVITY.get());
         AzItemRendererRegistry.register(GravityGeneratorItemRenderer::new, ModItems.GRAVITY_GENERATOR.get());
 
-        // The gravity generator uses AzureLib for its animated model, chained with the
-        // common field overlay.
-        // (The AzureLib stellar-gravity renderer stays Forge-only for now.)
+        // AzureLib animated models, each chained with its common field overlay
         BlockEntityRenderers.register(ModBlockEntityTypes.GRAVITY_GENERATOR.get(),
                 context -> new FabricGravityGeneratorRenderer());
+        BlockEntityRenderers.register(ModBlockEntityTypes.STELLAR_GRAVITY.get(),
+                context -> new FabricStellarGravityRenderer());
     }
 }

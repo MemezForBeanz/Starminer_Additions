@@ -2,7 +2,6 @@ package net.memezforbeanz.starminerodyssey.registry;
 
 
 import com.teamresourceful.resourcefullib.common.item.tabs.ResourcefulCreativeTab;
-import com.teamresourceful.resourcefullib.common.registry.RegistryEntry;
 import com.teamresourceful.resourcefullib.common.registry.ResourcefulRegistries;
 import com.teamresourceful.resourcefullib.common.registry.ResourcefulRegistry;
 
@@ -13,11 +12,9 @@ import net.minecraft.world.item.CreativeModeTab;
 
 import java.util.function.Supplier;
 
-import java.util.function.Supplier;
-
 public class Tabs {
     public static final ResourcefulRegistry<CreativeModeTab> TABS;
-    public static final RegistryEntry<CreativeModeTab> TAB;
+    public static final Supplier<CreativeModeTab> TAB;
 
     public Tabs() {
     }
@@ -25,12 +22,11 @@ public class Tabs {
     static {
         TABS = ResourcefulRegistries.create(BuiltInRegistries.CREATIVE_MODE_TAB, StarminerAdditions.MOD_ID);
 
-        // Register the creative tab properly - the build() method returns a Supplier<CreativeModeTab>
-        Supplier<CreativeModeTab> tabSupplier = new ResourcefulCreativeTab(new ResourceLocation(StarminerAdditions.MOD_ID, "main"))
+        // build() registers the tab itself on both loaders (Forge: its own DeferredRegister, Fabric: directly);
+        // registering the returned tab again fails on Fabric ("registered twice")
+        TAB = new ResourcefulCreativeTab(new ResourceLocation(StarminerAdditions.MOD_ID, "main"))
                 .setItemIcon(ModItems.STELLAR_CORE)
                 .addRegistry(ModItems.ITEMS)
                 .build();
-
-        TAB = TABS.register("main", tabSupplier);
     }
 }

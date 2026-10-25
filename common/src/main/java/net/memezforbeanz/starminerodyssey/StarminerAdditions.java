@@ -1,9 +1,15 @@
 package net.memezforbeanz.starminerodyssey;
 
 import mod.azure.azurelib.render.item.AzItemRendererRegistry;
+import dev.architectury.event.EventResult;
+import dev.architectury.event.events.common.EntityEvent;
+import net.memezforbeanz.starminerodyssey.blocks.AbstractGravityFieldBlockEntity;
 import net.memezforbeanz.starminerodyssey.gravity.GravityAnchors;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.memezforbeanz.starminerodyssey.item.client.StellarCoreRenderer;
 import net.memezforbeanz.starminerodyssey.network.ModNetwork;
+import net.memezforbeanz.starminerodyssey.shipspawn.ShipSpawner;
 import net.memezforbeanz.starminerodyssey.registry.*;
 import org.slf4j.Logger;
 
@@ -36,6 +42,15 @@ public class StarminerAdditions {
 		LOGGER.info("Initialized networking");
 		GravityAnchors.init();
 		LOGGER.info("Initialized gravity anchors");
+		// Spawning mobs start out in the gravity of the field they spawn in
+		EntityEvent.ADD.register((entity, level) -> {
+			if (entity instanceof LivingEntity && !(entity instanceof Player)) {
+				AbstractGravityFieldBlockEntity.alignSpawnedEntity(level, entity);
+			}
+			return EventResult.pass();
+		});
+		ShipSpawner.init();
+		LOGGER.info("Initialized ship spawner");
 		LOGGER.info("Starminer Additions initialization complete!");
 	}
     public static void initClient() {

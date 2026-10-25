@@ -97,6 +97,10 @@ dependencies {
     }
     // Exclude only the base joml module (Minecraft ships org.joml:joml)
 
+    // Ship spawner (ForgeShipBridge) compiles against ServerShip etc.
+    compileOnly("org.valkyrienskies.core:api:$vscore_version") {
+        exclude group: "org.joml", module: "joml"
+    }
     forgeRuntimeLibrary("org.valkyrienskies.core:api:$vscore_version") {
         exclude group: "org.joml", module: "joml"
     }
@@ -130,7 +134,7 @@ dependencies {
         "com.flipkart.zjsonpatch:zjsonpatch:0.4.11",
     ].each { forgeRuntimeLibrary(it) { exclude group: "org.jetbrains.kotlin" } }
 
-    modImplementation("net.memezforbeanz.gravityapi:gravityapi:1.0.26") {
+    modImplementation("net.memezforbeanz.gravityapi:gravityapi:$gravityapi_version") {
         exclude group: "io.github.llamalad7"
         exclude group: "com.github.bawnorton.mixinsquared"
     }

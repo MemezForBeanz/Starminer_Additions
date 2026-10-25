@@ -30,9 +30,11 @@
     "java": ">=21",
     "architectury": ">=9.2.14",
     "fabric-api": "*",
+    "gravityapi": ">=1.0.28",
+    "azurelib": ">=3.1.24",
     "modernui": ">=3.12.0"
   },
   "suggests": {
-    "another-mod": "*"
+    "valkyrienskies": "*"
   }
 }

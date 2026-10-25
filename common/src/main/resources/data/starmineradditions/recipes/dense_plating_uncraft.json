@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "starmineradditions:dense_plating"
+    }
+  ],
+  "result": {
+    "item": "starmineradditions:plating",
+    "count": 2
+  }
+}

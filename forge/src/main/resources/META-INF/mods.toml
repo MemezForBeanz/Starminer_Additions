@@ -36,7 +36,15 @@ side = "BOTH"
 [[dependencies.starmineradditions]]
 modId = "gravityapi"
 mandatory = true
-versionRange = "[1.0.18,)"
+versionRange = "[1.0.28,)"
+ordering = "AFTER"
+side = "BOTH"
+
+# Ship spawner: spawned structures assemble into ships when present
+[[dependencies.starmineradditions]]
+modId = "valkyrienskies"
+mandatory = false
+versionRange = "[2.4,)"
 ordering = "AFTER"
 side = "BOTH"
 
